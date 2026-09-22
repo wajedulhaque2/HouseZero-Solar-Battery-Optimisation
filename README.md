@@ -96,6 +96,10 @@ See [Formula, Query & Model Guide](docs/FORMULA_GUIDE.md), [Workbook Architectur
 
 ## Files
 
+### Interactive dashboard
+
+The source-backed Streamlit dashboard lives in `dashboard/`. Install `requirements.txt` and run `streamlit run dashboard/app.py`; in Streamlit Community Cloud use `dashboard/app.py` as the entry point. The repository workbook already contains the 8,784 hourly observations. Rebuild the compact dashboard snapshot with `python dashboard/prepare_data.py`. The interactive scenario preserves the workbook's bill floor, hourly battery constraints and financial assumptions, and its default NPV reconciles to the cached model. The dashboard offers an explicit light/dark switch, full-width energy figures, and interactive PV, battery and export-compensation controls.
+
 - [`workbook/HouseZero_Solar_Battery_Optimisation_Portfolio.xlsx`](workbook/HouseZero_Solar_Battery_Optimisation_Portfolio.xlsx) - cached portfolio workbook
 - [`docs/HouseZero_Project_Summary.pdf`](docs/HouseZero_Project_Summary.pdf) - 3-page project summary
 - [`docs/FORMULA_GUIDE.md`](docs/FORMULA_GUIDE.md) - dispatch, financial and scenario logic
