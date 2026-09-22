@@ -17,22 +17,28 @@ st.set_page_config(page_title="HouseZero | solar & battery", page_icon="☀️",
 st.sidebar.title("HouseZero")
 dark = st.sidebar.toggle("Dark mode", value=False)
 BG, SURFACE, TEXT, MUTED, GRID, BORDER, TEAL, GOLD, BLUE = (
-    ("#101B26", "#1C2D3B", "#F5F8FA", "#B8C9D3", "#314757", "#3B5060", "#40C6C1", "#FFC45B", "#84AFFF")
+    ("#14251F", "#213B31", "#FAF7ED", "#C6D1C5", "#415749", "#496354", "#6BCC9F", "#FFCC59", "#8BB6D7")
     if dark else
-    ("#F5F8FA", "#FFFFFF", "#173348", "#516879", "#E3EBEF", "#DCE6EB", "#168A84", "#D68B20", "#416B9B")
+    ("#F7F2E5", "#FFFEF7", "#244235", "#5E6C5D", "#E7E3D4", "#E4DFCE", "#237A52", "#CF8A16", "#527FA2")
 )
 st.markdown(f"""
 <style>
-.stApp {{background:{BG};color:{TEXT};}}
+.stApp {{background:{BG};color:{TEXT};font-family:'Trebuchet MS',Arial,sans-serif;}}
 [data-testid="stHeader"] {{background:{BG};}}
-[data-testid="stSidebar"] {{background:{SURFACE};border-right:1px solid {BORDER};color:{TEXT};}}
+[data-testid="stSidebar"] {{background:{'#17372B' if not dark else SURFACE};border-right:5px solid {GOLD};color:#FFFBEE;}}
 .stApp h1,.stApp h2,.stApp h3,.stApp p,.stApp label,[data-testid="stSidebar"] h1,[data-testid="stSidebar"] label {{color:{TEXT};}}
+.stApp h1,.stApp h2,.stApp h3 {{font-family:'Trebuchet MS',Arial,sans-serif;letter-spacing:-.025em;}}
+[data-testid="stSidebar"] h1,[data-testid="stSidebar"] p,[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] [role="radiogroup"] * {{color:#FFFBEE !important;}}
+[data-testid="stSidebar"] [data-baseweb="select"] > div {{background:#254A3B;border-color:#638A71;}}
+[data-testid="stSidebar"] [data-baseweb="select"] * {{color:#FFFBEE;}}
 .stApp [data-testid="stCaptionContainer"] p,[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {{color:{MUTED};}}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {{color:#C7DCCB !important;}}
 [data-testid="stMetric"],[data-testid="stPlotlyChart"],[data-testid="stDataFrame"] {{background:{SURFACE};border:1px solid {BORDER};border-radius:10px;}}
-[data-testid="stMetric"] {{padding:.85rem 1rem;min-height:115px;}}
+[data-testid="stMetric"] {{padding:.85rem 1rem;min-height:115px;border-radius:16px;border-bottom:5px solid {GOLD};}}
 [data-testid="stMetric"] label,[data-testid="stMetricValue"] {{color:{TEXT};}}
-[data-testid="stPlotlyChart"],[data-testid="stDataFrame"] {{padding:.3rem;}}
-.scope {{background:{'#263F49' if dark else '#E6F3F0'};border-left:4px solid {TEAL};padding:.75rem 1rem;margin:.4rem 0 1.1rem;color:{TEXT};}}
+[data-testid="stPlotlyChart"],[data-testid="stDataFrame"] {{padding:.4rem;border-radius:16px;}}
+.scope {{background:{'#344B36' if dark else '#EBE6CB'};border-left:5px solid {GOLD};padding:.8rem 1rem;margin:.4rem 0 1.1rem;color:{TEXT};border-radius:0 12px 12px 0;}}
 [data-baseweb="select"] > div,[data-baseweb="input"] > div {{background:{SURFACE};color:{TEXT};border-color:{BORDER};}}
 [data-baseweb="select"] *,[data-baseweb="input"] input,[data-baseweb="popover"] li {{color:{TEXT};}}
 [data-baseweb="popover"],[data-baseweb="popover"] li {{background:{SURFACE};}}
@@ -53,8 +59,8 @@ def run(pv_kwp: int, battery_kwh: int, export_fraction: float):
 def plot(fig: go.Figure, height: int = 410, bottom: int = 55) -> None:
     fig.update_layout(
         template="plotly_dark" if dark else "plotly_white", height=height,
-        paper_bgcolor=SURFACE, plot_bgcolor=SURFACE, font={"family": "Arial", "size": 12, "color": TEXT},
-        title={"x": .025, "xanchor": "left", "font": {"size": 18}},
+        paper_bgcolor=SURFACE, plot_bgcolor=SURFACE, font={"family": "Trebuchet MS, Arial", "size": 12, "color": TEXT},
+        title={"x": .025, "xanchor": "left", "font": {"size": 18, "family": "Trebuchet MS"}},
         margin={"l": 48, "r": 34, "t": 65, "b": bottom},
         hoverlabel={"font": {"family": "Arial"}},
     )
@@ -78,12 +84,13 @@ st.markdown(f'<div class="scope">{pv_kwp} kWp total PV · {battery_kwh} kWh batt
             unsafe_allow_html=True)
 
 if view == "Overview":
-    cards = st.columns(4)
+    cards = st.columns([1.35, 1, 1, 1])
     cards[0].metric("25-year NPV", f"${metrics['npv']:,.0f}")
     cards[1].metric("Grid imports", f"{metrics['grid_import']:,.0f} kWh")
     cards[2].metric("Electricity self-sufficiency", f"{metrics['self_sufficiency']:.1%}")
     cards[3].metric("Incremental investment", f"${metrics['investment']:,.0f}")
     st.caption("NPV uses the workbook's annual bill floor at $0. Exports cannot produce a negative annual bill in this model.")
+    st.subheader("Energy balance")
 
     totals = pd.DataFrame({"Case": ["Existing 15 kWp", "Selected retrofit"],
                            "Grid import": [metrics["baseline_import"], metrics["grid_import"]],
